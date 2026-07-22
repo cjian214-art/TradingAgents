@@ -268,6 +268,70 @@ ta = TradingAgentsGraph(config=config)
 _, decision = ta.propagate("NVDA", "2026-01-15")
 ```
 
+## Scanner-aligned research study
+
+The optional research module evaluates a narrow, transparent component of a
+Market Scanner workflow without changing agent decisions, Scanner scores, or
+placing orders. It forms a signal on a completed daily close when all of these
+conditions hold:
+
+- price is above MA50 and MA50 is above MA200;
+- current volume is at least 1.5× the *prior* 50-trading-day average;
+- close is above the *prior* 20-trading-day high; and
+- RSI is within its configured range.
+
+The study uses `backtesting.py` and enters at the next available open, so it
+does not assume a same-close fill. Relative-strength ranking is deliberately
+not included: it requires a date-aligned peer universe and is evaluated in a
+later research stage rather than guessed for one ticker.
+
+Install the optional dependencies and run one explicit, research-only study:
+
+```bash
+pip install -e ".[research]"
+python scripts/run_scanner_research.py \
+  --provider yfinance --symbol AAPL \
+  --start 2022-01-01 --end 2026-07-21 \
+  --output-dir results/research/aapl
+```
+
+For mainland or Beijing A-shares, select the provider explicitly:
+
+```bash
+python scripts/run_scanner_research.py \
+  --provider akshare --symbol 600519.SS \
+  --start 2022-01-01 --end 2026-07-21 \
+  --output-dir results/research/600519
+```
+
+Each run writes a data-quality record, JSON summary, signal-event CSV,
+completed-trade CSV, Markdown report, and HTML report. A stale or malformed
+price frame stops the study rather than producing a result. These artifacts are
+for research only and do not create an order, broker connection, or alert.
+
+### Date-aligned relative-strength research
+
+Use this separate event study to test the Scanner-style trend/volume signal
+only when a stock also ranks in the strongest supplied peer group. It uses
+shared trading dates only, reports any reduced universe coverage, enters at the
+next shared-session open, and records fixed 5-day and 20-day outcomes against a
+benchmark. It is evidence about a supplied historical sample, not a portfolio,
+forecast, or investment recommendation.
+
+```bash
+python scripts/run_universe_research.py \
+  --provider yfinance \
+  --symbols AAPL,MSFT,NVDA,SPY \
+  --benchmark SPY \
+  --start 2021-01-01 \
+  --end 2025-12-31
+```
+
+The output contains the coverage label, full cross-sectional rankings, each
+qualified event, costs/slippage assumptions, and separate summary statistics
+for each fixed holding period. Do not tune parameters against the same report;
+change assumptions in a new, explicitly dated run.
+
 ## Reproducibility
 
 TradingAgents is LLM-driven, so two runs of the same ticker and date can differ. This is expected for a research tool built on language models, not a defect. The variation comes from a few distinct sources, and it helps to separate them.
