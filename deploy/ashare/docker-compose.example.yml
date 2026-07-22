@@ -1,0 +1,14 @@
+# Separate TradingAgents-AShare service. It is opt-in via the `ashare` profile
+# and is never launched by TradingAgents or the research scripts.
+services:
+  tradingagents-ashare:
+    image: ghcr.io/kylinmountain/tradingagents-ashare:latest
+    profiles: ["ashare"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8010:8000"
+    environment:
+      DATABASE_URL: "sqlite:///./data/tradingagents.db"
+      TA_APP_SECRET_KEY: "${TA_APP_SECRET_KEY:?Set a persistent local secret before enabling this profile}"
+    volumes:
+      - ./data:/app/data

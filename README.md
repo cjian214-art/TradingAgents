@@ -309,6 +309,29 @@ completed-trade CSV, Markdown report, and HTML report. A stale or malformed
 price frame stops the study rather than producing a result. These artifacts are
 for research only and do not create an order, broker connection, or alert.
 
+### Date-aligned relative-strength research
+
+Use this separate event study to test the Scanner-style trend/volume signal
+only when a stock also ranks in the strongest supplied peer group. It uses
+shared trading dates only, reports any reduced universe coverage, enters at the
+next shared-session open, and records fixed 5-day and 20-day outcomes against a
+benchmark. It is evidence about a supplied historical sample, not a portfolio,
+forecast, or investment recommendation.
+
+```bash
+python scripts/run_universe_research.py \
+  --provider yfinance \
+  --symbols AAPL,MSFT,NVDA,SPY \
+  --benchmark SPY \
+  --start 2021-01-01 \
+  --end 2025-12-31
+```
+
+The output contains the coverage label, full cross-sectional rankings, each
+qualified event, costs/slippage assumptions, and separate summary statistics
+for each fixed holding period. Do not tune parameters against the same report;
+change assumptions in a new, explicitly dated run.
+
 ## Reproducibility
 
 TradingAgents is LLM-driven, so two runs of the same ticker and date can differ. This is expected for a research tool built on language models, not a defect. The variation comes from a few distinct sources, and it helps to separate them.

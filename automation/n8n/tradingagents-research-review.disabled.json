@@ -1,0 +1,44 @@
+{
+  "name": "TradingAgents research review (disabled template)",
+  "id": "c6a1a915-08f7-4d04-976a-9e4aed1f1c31",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "8f3cbf5d-8b2d-4688-9cc5-5e3efee7db47",
+      "name": "Manual review trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9bf9e208-1e93-4865-8952-61c07c7f68c0",
+              "name": "message",
+              "value": "Review the uploaded TradingAgents research artifact manually. Confirm data source, coverage status, date range, and cost assumptions before acting. This workflow sends nothing by default.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "80fe4e25-35a4-4a7a-ac2b-8bd711b5e1fd",
+      "name": "Create review message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [520, 300]
+    }
+  ],
+  "connections": {
+    "Manual review trigger": {
+      "main": [[{"node": "Create review message", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": [],
+  "active": false
+}

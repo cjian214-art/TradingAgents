@@ -9,7 +9,9 @@ from pathlib import Path
 import pandas as pd
 
 from .market_data import OHLCVData
+from .context import write_research_contexts
 from .study import StudyResult
+from .universe import UniverseStudyResult
 
 
 def write_study_outputs(
@@ -45,6 +47,33 @@ def write_study_outputs(
             signal_table,
             "<h2>Trades</h2>",
             trades_table,
+            "</body></html>",
+        ]
+    )
+    (destination / "report.html").write_text(page, encoding="utf-8")
+    return destination
+
+
+def write_universe_study_outputs(result: UniverseStudyResult, output_dir: str | Path) -> Path:
+    """Write transparent coverage, ranking, and event-study artifacts."""
+    destination = Path(output_dir)
+    destination.mkdir(parents=True, exist_ok=True)
+    summary_text = json.dumps(result.summary, ensure_ascii=False, indent=2, default=str)
+    (destination / "summary.json").write_text(summary_text + "\n", encoding="utf-8")
+    result.rankings.to_csv(destination / "relative_strength_rankings.csv", index=False, encoding="utf-8")
+    result.events.to_csv(destination / "qualified_events.csv", index=False, encoding="utf-8")
+    write_research_contexts(result, destination)
+    markdown = "# Date-aligned relative-strength event study\n\n```json\n" + summary_text + "\n```\n"
+    (destination / "report.md").write_text(markdown, encoding="utf-8")
+    page = "\n".join(
+        [
+            "<!doctype html>",
+            "<html><head><meta charset=\"utf-8\"><title>Relative-strength research</title></head><body>",
+            "<h1>Date-aligned relative-strength event study</h1>",
+            "<h2>Summary</h2>",
+            f"<pre>{html.escape(summary_text)}</pre>",
+            "<h2>Qualified events</h2>",
+            result.events.to_html(index=False, escape=True),
             "</body></html>",
         ]
     )
