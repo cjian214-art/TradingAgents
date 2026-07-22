@@ -7,7 +7,10 @@ from pathlib import Path
 
 from tradingagents.research.market_data import provider_from_name
 from tradingagents.research.reporting import write_universe_study_outputs
-from tradingagents.research.universe import UniverseStudyConfig, run_universe_relative_strength_study
+from tradingagents.research.universe import (
+    UniverseStudyConfig,
+    run_universe_relative_strength_study,
+)
 
 
 def _arguments() -> argparse.Namespace:

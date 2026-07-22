@@ -7,13 +7,14 @@ retains the data-coverage evidence needed to interpret those results.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from functools import reduce
-from typing import Any, Mapping
+from typing import Any
 
 import pandas as pd
 
-from .market_data import OHLCVData, REQUIRED_OHLCV_COLUMNS, ResearchDataError
+from .market_data import REQUIRED_OHLCV_COLUMNS, OHLCVData, ResearchDataError
 from .study import ScannerStudyConfig, compute_scanner_aligned_signals
 
 

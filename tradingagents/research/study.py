@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import math
+from dataclasses import asdict, dataclass
 from typing import Any
 
 import pandas as pd
 
-from .market_data import OHLCVData, REQUIRED_OHLCV_COLUMNS, ResearchDataError
+from .market_data import REQUIRED_OHLCV_COLUMNS, OHLCVData, ResearchDataError
 
 
 @dataclass(frozen=True)

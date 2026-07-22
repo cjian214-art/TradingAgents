@@ -7,13 +7,13 @@ states its provider, requested period, latest usable bar, and freshness status.
 
 from __future__ import annotations
 
+import re
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import timedelta
-import re
-from typing import Callable, Literal
+from typing import Literal
 
 import pandas as pd
-
 
 QualityStatus = Literal["ok", "stale"]
 REQUIRED_OHLCV_COLUMNS = ("Date", "Open", "High", "Low", "Close", "Volume")

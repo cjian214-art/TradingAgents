@@ -6,10 +6,8 @@ import html
 import json
 from pathlib import Path
 
-import pandas as pd
-
-from .market_data import OHLCVData
 from .context import write_research_contexts
+from .market_data import OHLCVData
 from .study import StudyResult
 from .universe import UniverseStudyResult
 

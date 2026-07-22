@@ -9,7 +9,10 @@ from tradingagents.research.context import (
     write_research_contexts,
 )
 from tradingagents.research.study import ScannerStudyConfig
-from tradingagents.research.universe import UniverseStudyConfig, run_universe_relative_strength_study
+from tradingagents.research.universe import (
+    UniverseStudyConfig,
+    run_universe_relative_strength_study,
+)
 
 from .test_research_universe import _data
 

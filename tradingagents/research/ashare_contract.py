@@ -7,11 +7,11 @@ licensed service.
 
 from __future__ import annotations
 
+import re
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from datetime import date
-import re
-from typing import Any, Mapping
-
+from typing import Any
 
 ASHARE_CONTRACT_VERSION = "1.0"
 _CN_SYMBOL = re.compile(r"^(?P<code>\d{6})(?:\.(?P<suffix>SS|SZ|BJ|SH))?$")
