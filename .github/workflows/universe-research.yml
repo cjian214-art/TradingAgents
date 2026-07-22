@@ -1,0 +1,63 @@
+name: Manual universe research
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: Historical-data provider for this one run
+        required: true
+        default: yfinance
+        type: choice
+        options: [yfinance, akshare]
+      symbols:
+        description: Comma-separated symbols from that provider, including the benchmark
+        required: true
+        default: AAPL,MSFT,NVDA,SPY
+        type: string
+      benchmark:
+        description: Benchmark symbol included in the supplied universe
+        required: true
+        default: SPY
+        type: string
+      start:
+        description: Inclusive historical start date (YYYY-MM-DD)
+        required: true
+        default: "2022-01-03"
+        type: string
+      end:
+        description: Inclusive historical end date (YYYY-MM-DD)
+        required: true
+        default: "2025-12-31"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    name: Historical research only
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install isolated research dependencies
+        run: python -m pip install --upgrade pip pandas yfinance akshare backtesting
+      - name: Run date-aligned study
+        run: >-
+          python scripts/run_universe_research.py
+          --provider "${{ inputs.provider }}"
+          --symbols "${{ inputs.symbols }}"
+          --benchmark "${{ inputs.benchmark }}"
+          --start "${{ inputs.start }}"
+          --end "${{ inputs.end }}"
+          --output-dir results/universe-research
+      - name: Upload research artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: universe-research-${{ github.run_id }}
+          path: results/universe-research
+          if-no-files-found: error
+          retention-days: 14
